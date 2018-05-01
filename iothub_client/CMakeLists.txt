@@ -19,17 +19,25 @@ set(iothub_client_c_files
     ./src/version.c
 )
 
-set(iothub_client_h_files
-    ./inc/internal/blob.h
+set(iothub_client_public_h_files
     ./inc/iothub_client.h
     ./inc/iothub_client_ll.h
-    ./inc/internal/iothub_client_diagnostic.h
     ./inc/iothub_client_options.h
-    ./inc/internal/iothub_client_private.h
     ./inc/iothub_client_version.h
-    ./inc/iothub_transport_ll.h
     ./inc/iothub_message.h
+    ./inc/iothub_transport_ll.h
+)
+
+set(iothub_client_internal_h_files
+    ./inc/internal/blob.h
+    ./inc/internal/iothub_client_diagnostic.h
+    ./inc/internal/iothub_client_private.h
     ./inc/internal/iothubtransport.h
+)
+
+set(iothub_client_h_files 
+    ${iothub_client_public_h_files}
+    ${iothub_client_internal_h_files}
 )
 
 set(iothub_client_libs)
@@ -60,7 +68,7 @@ if (${use_prov_client})
 endif()
 
 set(iothub_client_h_install_files
-    ${iothub_client_h_files}
+    ${iothub_client_public_h_files}
 )
 
 if(${use_http})
@@ -73,16 +81,17 @@ if(${use_http})
         ./src/iothubtransporthttp.c
     )
 
-    set(iothub_client_http_transport_h_files
+    set(iothub_client_http_transport_internal_h_files
         ./inc/internal/iothub_client_authorization.h
         ./inc/internal/iothub_client_retry_control.h
+    )
+    set(iothub_client_http_transport_public_h_files
         ./inc/iothubtransporthttp.h
         ./inc/iothub_transport_ll.h
     )
-
     set(iothub_client_h_install_files
         ${iothub_client_h_install_files}
-        ${iothub_client_http_transport_h_files}
+        ${iothub_client_http_transport_public_h_files}
     )
 endif()
 
@@ -107,7 +116,7 @@ if(${use_amqp})
         ./src/uamqp_messaging.c
     )
 
-    set(iothub_client_amqp_transport_common_h_files
+    set(iothub_client_amqp_transport_common_internal_h_files
         ./inc/internal/iothub_client_authorization.h
         ./inc/internal/iothub_client_retry_control.h
         ./inc/internal/iothubtransport_amqp_common.h
@@ -121,6 +130,11 @@ if(${use_amqp})
         ./inc/internal/message_queue.h
         ./inc/internal/uamqp_messaging.h
     )
+    
+    set(iothub_client_amqp_transport_public_h_files
+        ./inc/iothubtransportamqp.h
+    )
+    
 
     set(iothub_client_amqp_transport_c_files
         ${iothub_client_amqp_transport_common_c_files}
@@ -128,13 +142,8 @@ if(${use_amqp})
     )
 
     set(iothub_client_amqp_transport_h_files
-        ${iothub_client_amqp_transport_common_h_files}
-        ./inc/iothubtransportamqp.h
-    )
-
-    set(iothub_client_h_install_files
-        ${iothub_client_h_install_files}
-        ${iothub_client_amqp_transport_h_files}
+        ${iothub_client_amqp_transport_public_h_files}
+        ${iothub_client_amqp_transport_common_internal_h_files}
     )
 
     set(iothub_client_amqp_ws_transport_c_files
@@ -142,14 +151,17 @@ if(${use_amqp})
         ./src/iothubtransportamqp_websockets.c
     )
 
-    set(iothub_client_amqp_ws_transport_h_files
-        ${iothub_client_amqp_transport_common_h_files}
+    set(iothub_client_amqp_ws_transport_public_h_files
         ./inc/iothubtransportamqp_websockets.h
     )
-
+    set(iothub_client_amqp_ws_transport_h_files
+        ${iothub_client_amqp_transport_common_internal_h_files}
+        ${iothub_client_amqp_ws_transport_public_h_files}
+    )
     set(iothub_client_h_install_files
         ${iothub_client_h_install_files}
-        ./inc/iothubtransportamqp_websockets.h
+        ${iothub_client_amqp_transport_public_h_files}
+        ${iothub_client_amqp_ws_transport_public_h_files}
     )
 endif()
 
@@ -164,27 +176,40 @@ if(${use_mqtt})
         ./src/iothubtransport_mqtt_common.c
         ./src/iothubtransportmqtt_websockets.c
     )
-    set(iothub_client_mqtt_ws_transport_h_files
+    set(iothub_client_mqtt_ws_transport_public_h_files
+        ./inc/iothubtransportmqtt_websockets.h
+    )
+    set(iothub_client_mqtt_ws_transport_internal_h_files
         ./inc/internal/iothub_client_authorization.h
         ./inc/internal/iothub_client_retry_control.h
         ./inc/internal/iothubtransport_mqtt_common.h
-        ./inc/iothubtransportmqtt_websockets.h
+    )
+    set(iothub_client_mqtt_ws_transport_h_files 
+        ${iothub_client_mqtt_ws_transport_public_h_files} 
+        ${iothub_client_mqtt_ws_transport_internal_h_files}
     )
 
     set(iothub_client_mqtt_transport_c_files
         ./src/iothubtransport_mqtt_common.c
         ./src/iothubtransportmqtt.c
     )
+    
+    set(iothub_client_mqtt_transport_public_h_files
+        ./inc/iothubtransportmqtt.h
+    )
+    set(iothub_client_mqtt_transport_internal_h_files 
+        ./inc/internal/iothubtransport_mqtt_common.h    
+    )
 
     set(iothub_client_mqtt_transport_h_files
-        ./inc/internal/iothubtransport_mqtt_common.h
-        ./inc/iothubtransportmqtt.h
+        ${iothub_client_mqtt_transport_public_h_files}
+        ${iothub_client_mqtt_transport_internal_h_files}
     )
 
     set(iothub_client_h_install_files
         ${iothub_client_h_install_files}
-        ${iothub_client_mqtt_transport_h_files}
-        ${iothub_client_mqtt_ws_transport_h_files}
+        ${iothub_client_mqtt_transport_public_h_files}
+        ${iothub_client_mqtt_ws_transport_public_h_files}
     )
 endif()
 
@@ -256,7 +281,7 @@ if(${use_http})
     endif(build_as_dynamic)
 endif()
 
-if(${use_amqp})
+if(${use_amqp})   
     include_directories(${UAMQP_INCLUDES})
     include_directories(${IOTHUB_CLIENT_AMQP_TRANSPORT_INC_FOLDER} ${UAMQP_INC_FOLDER})
     add_library(iothub_client_amqp_transport

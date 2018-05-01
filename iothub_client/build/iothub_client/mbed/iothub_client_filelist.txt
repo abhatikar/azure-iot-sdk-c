@@ -1,14 +1,13 @@
 set(mbed_project_files
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../inc/iothub_client.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../inc/iothub_client_authorization.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../../inc/internal/iothub_client_authorization.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../inc/iothub_client_ll.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../inc/iothub_message.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../inc/iothub_client_private.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../inc/iothubtransport.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../inc/iothub_client_diagnostic.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../inc/iothub_client_ll_uploadtoblob.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../inc/blob.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../inc/blob.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../../inc/internal/iothub_client_private.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../../inc/internal/iothubtransport.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../../inc/internal/iothub_client_diagnostic.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../../inc/internal/iothub_client_ll_uploadtoblob.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../../inc/internal/blob.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../../deps/parson/parson.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../inc/iothub_transport_ll.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/iothub_client.c
