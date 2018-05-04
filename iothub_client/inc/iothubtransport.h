@@ -11,7 +11,7 @@ typedef struct TRANSPORT_HANDLE_DATA_TAG* TRANSPORT_HANDLE;
 #include "azure_c_shared_utility/crt_abstractions.h"
 
 #include "internal/iothub_client_core.h"
-#include "iothub_client_ll.h"
+#include "internal/iothub_client_core_ll.h"
 #include "iothub_client_private.h"
 #include "iothub_transport_ll.h"
 //

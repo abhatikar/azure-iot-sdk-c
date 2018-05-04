@@ -26,58 +26,14 @@
 #include "azure_c_shared_utility/macro_utils.h"
 #include "azure_c_shared_utility/umock_c_prod.h"
 
-#include "azure_c_shared_utility/agenttime.h"
-#include "azure_c_shared_utility/xio.h"
-#include "azure_c_shared_utility/doublylinkedlist.h"
-#include "iothub_message.h"
 #include "iothub_client_common.h"
-#include "iothub_transport_ll.h"
-#include "iothub_client_authorization.h"
-#include <stddef.h>
-#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-
-//maybe put this in upload to blob specific
-#define IOTHUB_CLIENT_FILE_UPLOAD_RESULT_VALUES \
-    FILE_UPLOAD_OK, \
-    FILE_UPLOAD_ERROR
-
-    DEFINE_ENUM(IOTHUB_CLIENT_FILE_UPLOAD_RESULT, IOTHUB_CLIENT_FILE_UPLOAD_RESULT_VALUES)
-    
-    typedef void(*IOTHUB_CLIENT_FILE_UPLOAD_CALLBACK)(IOTHUB_CLIENT_FILE_UPLOAD_RESULT result, void* userContextCallback);
     typedef struct IOTHUB_CLIENT_CORE_LL_HANDLE_DATA_TAG* IOTHUB_CLIENT_CORE_LL_HANDLE;
-
-#ifndef DONT_USE_UPLOADTOBLOB
-
-#define BLOCK_SIZE (4*1024*1024)
-
-#define IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_RESULT_VALUES \
-    IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_OK, \
-    IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_ABORT
-
-    DEFINE_ENUM(IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_RESULT, IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_RESULT_VALUES);
-
-    /**
-    *  @brief           Callback invoked by IoTHubClient_UploadMultipleBlocksToBlobAsync requesting the chunks of data to be uploaded.
-    *  @param result    The result of the upload of the previous block of data provided by the user (IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK_EX only)
-    *  @param data      Next block of data to be uploaded, to be provided by the user when this callback is invoked.
-    *  @param size      Size of the data parameter.
-    *  @param context   User context provided on the call to IoTHubClient_UploadMultipleBlocksToBlobAsync.
-    *  @remarks         If the user wants to abort the upload, the callback should return IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_ABORT
-    *                   It should return IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_OK otherwise.
-    *                   If a NULL is provided for parameter "data" and/or zero is provided for "size", the user indicates to the client that the complete file has been uploaded.
-    *                   In such case this callback will be invoked only once more to indicate the status of the final block upload.
-    *                   If result is not FILE_UPLOAD_OK, the download is cancelled and this callback stops being invoked.
-    *                   When this callback is called for the last time, no data or size is expected, so data and size are set to NULL
-    */
-    typedef void(*IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK)(IOTHUB_CLIENT_FILE_UPLOAD_RESULT result, unsigned char const ** data, size_t* size, void* context);
-    typedef IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_RESULT(*IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK_EX)(IOTHUB_CLIENT_FILE_UPLOAD_RESULT result, unsigned char const ** data, size_t* size, void* context);
-#endif /* DONT_USE_UPLOADTOBLOB */
 
      MOCKABLE_FUNCTION(, IOTHUB_CLIENT_CORE_LL_HANDLE, IoTHubClientCore_LL_CreateFromConnectionString, const char*, connectionString, IOTHUB_CLIENT_TRANSPORT_PROVIDER, protocol);
      MOCKABLE_FUNCTION(, IOTHUB_CLIENT_CORE_LL_HANDLE, IoTHubClientCore_LL_Create, const IOTHUB_CLIENT_CONFIG*, config);

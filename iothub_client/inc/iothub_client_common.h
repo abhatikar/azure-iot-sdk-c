@@ -9,12 +9,18 @@
 #include "azure_c_shared_utility/macro_utils.h"
 #include "azure_c_shared_utility/umock_c_prod.h"
 
-//#include "iothub_transport_ll.h"
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif
+
+    //maybe put this in upload to blob specific
+#define IOTHUB_CLIENT_FILE_UPLOAD_RESULT_VALUES \
+    FILE_UPLOAD_OK, \
+    FILE_UPLOAD_ERROR
+
+    DEFINE_ENUM(IOTHUB_CLIENT_FILE_UPLOAD_RESULT, IOTHUB_CLIENT_FILE_UPLOAD_RESULT_VALUES)
+    typedef void(*IOTHUB_CLIENT_FILE_UPLOAD_CALLBACK)(IOTHUB_CLIENT_FILE_UPLOAD_RESULT result, void* userContextCallback);
 
 #define IOTHUB_CLIENT_RESULT_VALUES       \
     IOTHUB_CLIENT_OK,                     \
@@ -23,10 +29,10 @@ extern "C"
     IOTHUB_CLIENT_INVALID_SIZE,           \
     IOTHUB_CLIENT_INDEFINITE_TIME
 
-/** @brief Enumeration specifying the status of calls to various APIs in this module.
-*/
+    /** @brief Enumeration specifying the status of calls to various APIs in this module.
+    */
 
-DEFINE_ENUM(IOTHUB_CLIENT_RESULT, IOTHUB_CLIENT_RESULT_VALUES);
+    DEFINE_ENUM(IOTHUB_CLIENT_RESULT, IOTHUB_CLIENT_RESULT_VALUES);
 
 #define IOTHUB_CLIENT_RETRY_POLICY_VALUES     \
     IOTHUB_CLIENT_RETRY_NONE,                   \
@@ -37,48 +43,64 @@ DEFINE_ENUM(IOTHUB_CLIENT_RESULT, IOTHUB_CLIENT_RESULT_VALUES);
     IOTHUB_CLIENT_RETRY_EXPONENTIAL_BACKOFF_WITH_JITTER,                 \
     IOTHUB_CLIENT_RETRY_RANDOM
 
-/** @brief Enumeration passed in by the IoT Hub when the event confirmation
-*		   callback is invoked to indicate status of the event processing in
-*		   the hub.
-*/
-DEFINE_ENUM(IOTHUB_CLIENT_RETRY_POLICY, IOTHUB_CLIENT_RETRY_POLICY_VALUES);
+    /** @brief Enumeration passed in by the IoT Hub when the event confirmation
+    *		   callback is invoked to indicate status of the event processing in
+    *		   the hub.
+    */
+    DEFINE_ENUM(IOTHUB_CLIENT_RETRY_POLICY, IOTHUB_CLIENT_RETRY_POLICY_VALUES);
 
-struct IOTHUBTRANSPORT_CONFIG_TAG;
-typedef struct IOTHUBTRANSPORT_CONFIG_TAG IOTHUBTRANSPORT_CONFIG;
+    struct IOTHUBTRANSPORT_CONFIG_TAG;
+    typedef struct IOTHUBTRANSPORT_CONFIG_TAG IOTHUBTRANSPORT_CONFIG;
 
 #define IOTHUB_CLIENT_STATUS_VALUES       \
     IOTHUB_CLIENT_SEND_STATUS_IDLE,       \
     IOTHUB_CLIENT_SEND_STATUS_BUSY
 
-/** @brief Enumeration returned by the ::IoTHubClient_LL_GetSendStatus
-*		   API to indicate the current sending status of the IoT Hub client.
-*/
-DEFINE_ENUM(IOTHUB_CLIENT_STATUS, IOTHUB_CLIENT_STATUS_VALUES);
+    /** @brief Enumeration returned by the ::IoTHubClient_LL_GetSendStatus
+    *		   API to indicate the current sending status of the IoT Hub client.
+    */
+    DEFINE_ENUM(IOTHUB_CLIENT_STATUS, IOTHUB_CLIENT_STATUS_VALUES);
 
 #define IOTHUB_IDENTITY_TYPE_VALUE  \
     IOTHUB_TYPE_TELEMETRY,          \
     IOTHUB_TYPE_DEVICE_TWIN,        \
     IOTHUB_TYPE_DEVICE_METHODS
-DEFINE_ENUM(IOTHUB_IDENTITY_TYPE, IOTHUB_IDENTITY_TYPE_VALUE);
+    DEFINE_ENUM(IOTHUB_IDENTITY_TYPE, IOTHUB_IDENTITY_TYPE_VALUE);
 
 #define IOTHUB_PROCESS_ITEM_RESULT_VALUE    \
     IOTHUB_PROCESS_OK,                      \
     IOTHUB_PROCESS_ERROR,                   \
     IOTHUB_PROCESS_NOT_CONNECTED,           \
     IOTHUB_PROCESS_CONTINUE
-DEFINE_ENUM(IOTHUB_PROCESS_ITEM_RESULT, IOTHUB_PROCESS_ITEM_RESULT_VALUE);
+    DEFINE_ENUM(IOTHUB_PROCESS_ITEM_RESULT, IOTHUB_PROCESS_ITEM_RESULT_VALUE);
 
 #define IOTHUBMESSAGE_DISPOSITION_RESULT_VALUES \
     IOTHUBMESSAGE_ACCEPTED, \
     IOTHUBMESSAGE_REJECTED, \
     IOTHUBMESSAGE_ABANDONED
 
-/** @brief Enumeration returned by the callback which is invoked whenever the
-*		   IoT Hub sends a message to the device.
-*/
-DEFINE_ENUM(IOTHUBMESSAGE_DISPOSITION_RESULT, IOTHUBMESSAGE_DISPOSITION_RESULT_VALUES);
+    /** @brief Enumeration returned by the callback which is invoked whenever the
+    *		   IoT Hub sends a message to the device.
+    */
+    DEFINE_ENUM(IOTHUBMESSAGE_DISPOSITION_RESULT, IOTHUBMESSAGE_DISPOSITION_RESULT_VALUES);
 
+#ifdef __cplusplus
+}
+#endif
 
+#include "azure_c_shared_utility/agenttime.h"
+#include "azure_c_shared_utility/xio.h"
+#include "azure_c_shared_utility/doublylinkedlist.h"
+#include "iothub_message.h"
+#include "iothub_transport_ll.h"
+#include "iothub_client_authorization.h"
+#include <stddef.h>
+#include <stdint.h>
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 #define IOTHUB_CLIENT_IOTHUB_METHOD_STATUS_VALUES \
     IOTHUB_CLIENT_IOTHUB_METHOD_STATUS_SUCCESS,   \
@@ -148,6 +170,33 @@ DEFINE_ENUM(IOTHUB_CLIENT_IOTHUB_METHOD_STATUS, IOTHUB_CLIENT_IOTHUB_METHOD_STAT
     typedef void(*IOTHUB_CLIENT_REPORTED_STATE_CALLBACK)(int status_code, void* userContextCallback);
     typedef int(*IOTHUB_CLIENT_DEVICE_METHOD_CALLBACK_ASYNC)(const char* method_name, const unsigned char* payload, size_t size, unsigned char** response, size_t* response_size, void* userContextCallback);
     typedef int(*IOTHUB_CLIENT_INBOUND_DEVICE_METHOD_CALLBACK)(const char* method_name, const unsigned char* payload, size_t size, METHOD_HANDLE method_id, void* userContextCallback);
+
+#ifndef DONT_USE_UPLOADTOBLOB
+
+#define BLOCK_SIZE (4*1024*1024)
+
+#define IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_RESULT_VALUES \
+    IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_OK, \
+    IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_ABORT
+
+    DEFINE_ENUM(IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_RESULT, IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_RESULT_VALUES);
+
+    /**
+    *  @brief           Callback invoked by IoTHubClient_UploadMultipleBlocksToBlobAsync requesting the chunks of data to be uploaded.
+    *  @param result    The result of the upload of the previous block of data provided by the user (IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK_EX only)
+    *  @param data      Next block of data to be uploaded, to be provided by the user when this callback is invoked.
+    *  @param size      Size of the data parameter.
+    *  @param context   User context provided on the call to IoTHubClient_UploadMultipleBlocksToBlobAsync.
+    *  @remarks         If the user wants to abort the upload, the callback should return IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_ABORT
+    *                   It should return IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_OK otherwise.
+    *                   If a NULL is provided for parameter "data" and/or zero is provided for "size", the user indicates to the client that the complete file has been uploaded.
+    *                   In such case this callback will be invoked only once more to indicate the status of the final block upload.
+    *                   If result is not FILE_UPLOAD_OK, the download is cancelled and this callback stops being invoked.
+    *                   When this callback is called for the last time, no data or size is expected, so data and size are set to NULL
+    */
+    typedef void(*IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK)(IOTHUB_CLIENT_FILE_UPLOAD_RESULT result, unsigned char const ** data, size_t* size, void* context);
+    typedef IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_RESULT(*IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK_EX)(IOTHUB_CLIENT_FILE_UPLOAD_RESULT result, unsigned char const ** data, size_t* size, void* context);
+#endif /* DONT_USE_UPLOADTOBLOB */
 
     /** @brief	This struct captures IoTHub client configuration. */
     typedef struct IOTHUB_CLIENT_CONFIG_TAG

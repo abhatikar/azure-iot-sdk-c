@@ -14,13 +14,15 @@ typedef struct TRANSPORT_PROVIDER_TAG TRANSPORT_PROVIDER;
 union IOTHUB_IDENTITY_INFO_TAG;
 typedef union IOTHUB_IDENTITY_INFO_TAG IOTHUB_IDENTITY_INFO;
 
+struct IOTHUB_CLIENT_CORE_LL_HANDLE_DATA_TAG;
+typedef struct IOTHUB_CLIENT_CORE_LL_HANDLE_DATA_TAG* IOTHUB_CLIENT_CORE_LL_HANDLE;
+
 typedef void* METHOD_HANDLE;
 
 #include "azure_c_shared_utility/doublylinkedlist.h"
 #include "azure_c_shared_utility/strings.h"
 #include "iothub_message.h"
 #include "iothub_client_authorization.h"
-#include "iothub_client_common.h"
 
 struct MESSAGE_DISPOSITION_CONTEXT_TAG;
 typedef struct MESSAGE_DISPOSITION_CONTEXT_TAG* MESSAGE_DISPOSITION_CONTEXT_HANDLE;
@@ -30,7 +32,9 @@ typedef struct MESSAGE_CALLBACK_INFO_TAG
     MESSAGE_DISPOSITION_CONTEXT_HANDLE transportContext;
 }MESSAGE_CALLBACK_INFO;
 
+#include "iothub_client_common.h"
 #include "internal/iothub_client_core_ll.h"
+
 
 #ifdef __cplusplus
 extern "C"
