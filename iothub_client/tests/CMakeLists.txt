@@ -40,7 +40,7 @@ if(NOT ${dont_use_uploadtoblob})
     add_unittest_directory(blob_ut)
 endif()
 
-add_unittest_directory(iothubclient_ut)
+add_unittest_directory(iothubclientcore_ut)
 add_unittest_directory(iothubmessage_ut)
 add_unittest_directory(iothubtransport_ut)
 add_unittest_directory(iothub_client_retry_control_ut)
