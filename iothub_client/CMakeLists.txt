@@ -16,6 +16,8 @@ set(iothub_client_c_files
     ./src/iothub_client_core_ll.c
     ./src/iothub_client_diagnostic.c
     ./src/iothub_client_ll.c
+    ./src/iothub_device_client.c
+    ./src/iothub_device_client_ll.c
     ./src/iothub_message.c
     ./src/iothubtransport.c
     ./src/version.c
@@ -32,6 +34,8 @@ set(iothub_client_h_files
     ./inc/iothub_client_options.h
     ./inc/iothub_client_private.h
     ./inc/iothub_client_version.h
+    ./inc/iothub_device_client.h
+    ./inc/iothub_device_client_ll.h
     ./inc/iothub_transport_ll.h
     ./inc/iothub_message.h
     ./inc/iothubtransport.h
