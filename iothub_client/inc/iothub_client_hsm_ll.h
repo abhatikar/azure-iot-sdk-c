@@ -15,7 +15,7 @@
 #include "azure_prov_client/iothub_auth_client.h"
 #endif
 
-#include "iothub_client_ll.h"
+#include "internal/iothub_client_core_ll.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -6,6 +6,9 @@
 #ifndef IOTHUB_CLIENT_COMMON_H
 #define IOTHUB_CLIENT_COMMON_H
 
+//struct TRANSPORT_PROVIDER_TAG;
+//typedef struct TRANSPORT_PROVIDER_TAG TRANSPORT_PROVIDER;
+
 #include "azure_c_shared_utility/macro_utils.h"
 #include "azure_c_shared_utility/umock_c_prod.h"
 
@@ -14,7 +17,6 @@ extern "C"
 {
 #endif
 
-    //maybe put this in upload to blob specific
 #define IOTHUB_CLIENT_FILE_UPLOAD_RESULT_VALUES \
     FILE_UPLOAD_OK, \
     FILE_UPLOAD_ERROR
@@ -51,6 +53,9 @@ extern "C"
 
     struct IOTHUBTRANSPORT_CONFIG_TAG;
     typedef struct IOTHUBTRANSPORT_CONFIG_TAG IOTHUBTRANSPORT_CONFIG;
+
+    struct TRANSPORT_PROVIDER_TAG;
+    typedef struct TRANSPORT_PROVIDER_TAG TRANSPORT_PROVIDER;
 
 #define IOTHUB_CLIENT_STATUS_VALUES       \
     IOTHUB_CLIENT_SEND_STATUS_IDLE,       \

@@ -31,8 +31,8 @@ extern "C"
 {
 #endif
 
-//struct IOTHUBTRANSPORT_CONFIG_TAG;
-//typedef struct IOTHUBTRANSPORT_CONFIG_TAG IOTHUBTRANSPORT_CONFIG;
+#include "iothub_transport_ll.h"
+#include "internal/iothub_client_core_ll.h"
 
 typedef struct IOTHUB_CLIENT_LL_HANDLE_DATA_TAG* IOTHUB_CLIENT_LL_HANDLE;
 
@@ -41,12 +41,6 @@ typedef struct IOTHUB_CLIENT_LL_HANDLE_DATA_TAG* IOTHUB_CLIENT_LL_HANDLE;
 #endif
 
 #include "azure_c_shared_utility/agenttime.h"
-//#include "azure_c_shared_utility/xio.h"
-//#include "azure_c_shared_utility/doublylinkedlist.h"
-//#include "iothub_message.h"
-#include "iothub_client_common.h"
-#include "iothub_transport_ll.h"
-//#include "iothub_client_authorization.h"
 #include <stddef.h>
 #include <stdint.h>
 

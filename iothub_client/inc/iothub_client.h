@@ -20,8 +20,9 @@
 
 #include "azure_c_shared_utility/umock_c_prod.h"
 #include "iothubtransport.h"
-#include "iothub_client_ll.h"
+#include "internal/iothub_client_core_ll.h"
 #include "internal/iothub_client_core.h"
+#include "iothub_client_ll.h"
 
 #ifndef IOTHUB_CLIENT_INSTANCE_TYPE
 typedef IOTHUB_CLIENT_CORE_HANDLE IOTHUB_CLIENT_HANDLE;

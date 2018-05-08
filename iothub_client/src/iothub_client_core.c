@@ -2090,7 +2090,7 @@ static int uploadMultipleBlock_thread(void* data)
     return markThreadReadyToBeGarbageCollected(threadInfo);
 }
 
-static IOTHUB_CLIENT_RESULT IoTHubClientCore_UploadMultipleBlocksToBlobAsync_Impl(IOTHUB_CLIENT_CORE_HANDLE iotHubClientHandle, const char* destinationFileName, IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK getDataCallback, IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK_EX getDataCallbackEx, void* context)
+IOTHUB_CLIENT_RESULT IoTHubClientCore_UploadMultipleBlocksToBlobAsync(IOTHUB_CLIENT_CORE_HANDLE iotHubClientHandle, const char* destinationFileName, IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK getDataCallback, IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK_EX getDataCallbackEx, void* context)
 {
     IOTHUB_CLIENT_RESULT result;
 
@@ -2147,16 +2147,6 @@ static IOTHUB_CLIENT_RESULT IoTHubClientCore_UploadMultipleBlocksToBlobAsync_Imp
         }
     }
     return result;
-}
-
-IOTHUB_CLIENT_RESULT IoTHubClientCore_UploadMultipleBlocksToBlobAsync(IOTHUB_CLIENT_CORE_HANDLE iotHubClientHandle, const char* destinationFileName, IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK getDataCallback, void* context)
-{
-    return IoTHubClientCore_UploadMultipleBlocksToBlobAsync_Impl(iotHubClientHandle, destinationFileName, getDataCallback, NULL, context);
-}
-
-IOTHUB_CLIENT_RESULT IoTHubClientCore_UploadMultipleBlocksToBlobAsyncEx(IOTHUB_CLIENT_CORE_HANDLE iotHubClientHandle, const char* destinationFileName, IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK_EX getDataCallbackEx, void* context)
-{
-    return IoTHubClientCore_UploadMultipleBlocksToBlobAsync_Impl(iotHubClientHandle, destinationFileName, NULL, getDataCallbackEx, context);
 }
 
 #endif /*DONT_USE_UPLOADTOBLOB*/

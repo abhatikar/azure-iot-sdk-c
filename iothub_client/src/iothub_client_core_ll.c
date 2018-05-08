@@ -147,7 +147,7 @@ static int create_blob_upload_module(IOTHUB_CLIENT_CORE_LL_HANDLE_DATA* handle_d
     (void)handle_data;
     (void)config;
 #ifndef DONT_USE_UPLOADTOBLOB
-    handle_data->uploadToBlobHandle = IoTHubClientCore_LL_UploadToBlob_Create(config);
+    handle_data->uploadToBlobHandle = IoTHubClient_LL_UploadToBlob_Create(config);
     if (handle_data->uploadToBlobHandle == NULL)
     {
         LogError("unable to IoTHubClientCore_LL_UploadToBlob_Create");
@@ -168,7 +168,7 @@ static void destroy_blob_upload_module(IOTHUB_CLIENT_CORE_LL_HANDLE_DATA* handle
     (void)handle_data;
 #ifndef DONT_USE_UPLOADTOBLOB
     /*Codes_SRS_IOTHUBCLIENT_LL_02_046: [ If creating the TICK_COUNTER_HANDLE fails then IoTHubClientCore_LL_Create shall fail and return NULL. ]*/
-    IoTHubClientCore_LL_UploadToBlob_Destroy(handle_data->uploadToBlobHandle);
+    IoTHubClient_LL_UploadToBlob_Destroy(handle_data->uploadToBlobHandle);
 #endif
 }
 
@@ -899,7 +899,7 @@ void IoTHubClientCore_LL_Destroy(IOTHUB_CLIENT_CORE_LL_HANDLE iotHubClientHandle
         IoTHubClient_Auth_Destroy(handleData->authorization_module);
         tickcounter_destroy(handleData->tickCounter);
 #ifndef DONT_USE_UPLOADTOBLOB
-        IoTHubClientCore_LL_UploadToBlob_Destroy(handleData->uploadToBlobHandle);
+        IoTHubClient_LL_UploadToBlob_Destroy(handleData->uploadToBlobHandle);
 #endif
         STRING_delete(handleData->product_info);
         free(handleData);
@@ -1667,7 +1667,7 @@ IOTHUB_CLIENT_RESULT IoTHubClientCore_LL_SetOption(IOTHUB_CLIENT_CORE_LL_HANDLE 
 #ifndef DONT_USE_UPLOADTOBLOB
             // This option just gets passed down into IoTHubClientCore_LL_UploadToBlob
             /*Codes_SRS_IOTHUBCLIENT_LL_30_010: [ blob_xfr_timeout - IoTHubClientCore_LL_SetOption shall pass this option to IoTHubClient_UploadToBlob_SetOption and return its result. ]*/
-            result = IoTHubClientCore_LL_UploadToBlob_SetOption(handleData->uploadToBlobHandle, optionName, value);
+            result = IoTHubClient_LL_UploadToBlob_SetOption(handleData->uploadToBlobHandle, optionName, value);
             if(result != IOTHUB_CLIENT_OK)
             {
                 LogError("unable to IoTHubClientCore_LL_UploadToBlob_SetOption");
@@ -1693,7 +1693,7 @@ IOTHUB_CLIENT_RESULT IoTHubClientCore_LL_SetOption(IOTHUB_CLIENT_CORE_LL_HANDLE 
             else
             {
                 /*Codes_SRS_IOTHUBCLIENT_LL_30_013: [ If the DONT_USE_UPLOADTOBLOB compiler switch is undefined, IoTHubClientCore_LL_SetOption shall pass unhandled options to IoTHubClient_UploadToBlob_SetOption and ignore the result. ]*/
-                (void)IoTHubClientCore_LL_UploadToBlob_SetOption(handleData->uploadToBlobHandle, optionName, value);
+                (void)IoTHubClient_LL_UploadToBlob_SetOption(handleData->uploadToBlobHandle, optionName, value);
             }
 #endif /*DONT_USE_UPLOADTOBLOB*/
         }
@@ -2015,7 +2015,7 @@ static IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_RESULT uploadMultipleBlocksCallbackWra
     return IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_OK;
 }
 
-IOTHUB_CLIENT_RESULT IoTHubClient_LL_UploadMultipleBlocksToBlob(IOTHUB_CLIENT_CORE_LL_HANDLE iotHubClientHandle, const char* destinationFileName, IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK getDataCallback, void* context)
+IOTHUB_CLIENT_RESULT IoTHubClientCore_LL_UploadMultipleBlocksToBlob(IOTHUB_CLIENT_CORE_LL_HANDLE iotHubClientHandle, const char* destinationFileName, IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK getDataCallback, void* context)
 {
     IOTHUB_CLIENT_RESULT result;
     /*Codes_SRS_IOTHUBCLIENT_LL_99_005: [ If `iotHubClientHandle` is `NULL` then `IoTHubClientCore_LL_UploadMultipleBlocksToBlob(Ex)` shall fail and return `IOTHUB_CLIENT_INVALID_ARG`. ]*/
@@ -2036,7 +2036,7 @@ IOTHUB_CLIENT_RESULT IoTHubClient_LL_UploadMultipleBlocksToBlob(IOTHUB_CLIENT_CO
         uploadMultipleBlocksWrapperContext.getDataCallback = getDataCallback;
         uploadMultipleBlocksWrapperContext.context = context;
 
-        result = IoTHubClientCore_LL_UploadMultipleBlocksToBlob_Impl(iotHubClientHandle->uploadToBlobHandle, destinationFileName, uploadMultipleBlocksCallbackWrapper, &uploadMultipleBlocksWrapperContext);
+        result = IoTHubClient_LL_UploadMultipleBlocksToBlob_Impl(iotHubClientHandle->uploadToBlobHandle, destinationFileName, uploadMultipleBlocksCallbackWrapper, &uploadMultipleBlocksWrapperContext);
     }
     return result;
 }
@@ -2058,7 +2058,7 @@ IOTHUB_CLIENT_RESULT IoTHubClientCore_LL_UploadMultipleBlocksToBlobEx(IOTHUB_CLI
     }
     else
     {
-        result = IoTHubClientCore_LL_UploadMultipleBlocksToBlob_Impl(iotHubClientHandle->uploadToBlobHandle, destinationFileName, getDataCallbackEx, context);
+        result = IoTHubClient_LL_UploadMultipleBlocksToBlob_Impl(iotHubClientHandle->uploadToBlobHandle, destinationFileName, getDataCallbackEx, context);
     }
     return result;
 }

@@ -20,12 +20,13 @@
 *			 often not desired.
 */
 
-#ifndef IOTHUB_CLIENT_LL_CORE_H
-#define IOTHUB_CLIENT_LL_CORE_H
+#ifndef IOTHUB_CLIENT_CORE_LL_H
+#define IOTHUB_CLIENT_CORE_LL_H
 
 #include "azure_c_shared_utility/macro_utils.h"
 #include "azure_c_shared_utility/umock_c_prod.h"
 
+#include "iothub_transport_ll.h"
 #include "iothub_client_common.h"
 
 #ifdef __cplusplus
@@ -66,4 +67,4 @@ extern "C"
 }
 #endif
 
-#endif /* IOTHUB_CLIENT_LL_H */
+#endif /* IOTHUB_CLIENT_CORE_LL_H */

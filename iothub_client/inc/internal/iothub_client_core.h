@@ -19,7 +19,6 @@
 #include <stdint.h>
 #include "iothubtransport.h"
 #include "internal/iothub_client_core_ll.h"
-#include "iothub_client_common.h"
 #include "azure_c_shared_utility/umock_c_prod.h"
 
 #ifndef IOTHUB_CLIENT_CORE_INSTANCE_TYPE
@@ -53,9 +52,7 @@ extern "C"
 
 #ifndef DONT_USE_UPLOADTOBLOB
     MOCKABLE_FUNCTION(, IOTHUB_CLIENT_RESULT, IoTHubClientCore_UploadToBlobAsync, IOTHUB_CLIENT_CORE_HANDLE, iotHubClientHandle, const char*, destinationFileName, const unsigned char*, source, size_t, size, IOTHUB_CLIENT_FILE_UPLOAD_CALLBACK, iotHubClientFileUploadCallback, void*, context);
-    MOCKABLE_FUNCTION(, IOTHUB_CLIENT_RESULT, IoTHubClientCore_UploadMultipleBlocksToBlobAsync, IOTHUB_CLIENT_CORE_HANDLE, iotHubClientHandle, const char*, destinationFileName, IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK, getDataCallback, void*, context);
-    MOCKABLE_FUNCTION(, IOTHUB_CLIENT_RESULT, IoTHubClientCore_UploadMultipleBlocksToBlobAsyncEx, IOTHUB_CLIENT_CORE_HANDLE, iotHubClientHandle, const char*, destinationFileName, IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK_EX, getDataCallbackEx, void*, context);
-
+    MOCKABLE_FUNCTION(, IOTHUB_CLIENT_RESULT, IoTHubClientCore_UploadMultipleBlocksToBlobAsync, IOTHUB_CLIENT_CORE_HANDLE, iotHubClientHandle, const char*, destinationFileName, IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK, getDataCallback, IOTHUB_CLIENT_FILE_UPLOAD_GET_DATA_CALLBACK_EX, getDataCallbackEx, void*, context);
 #endif /* DONT_USE_UPLOADTOBLOB */
 
 #ifdef __cplusplus

@@ -32,7 +32,7 @@ endfunction()
 
 #this is CMakeLists for iothub_client tests folder
 add_unittest_directory(iothub_client_authorization_ut)
-add_unittest_directory(iothubclient_ll_ut)
+add_unittest_directory(iothubclientcore_ll_ut)
 add_unittest_directory(iothubclient_diagnostic_ut)
 if(NOT ${dont_use_uploadtoblob})
     add_unittest_directory(iothubclient_ll_u2b_ut)
@@ -40,6 +40,7 @@ if(NOT ${dont_use_uploadtoblob})
     add_unittest_directory(blob_ut)
 endif()
 
+add_unittest_directory(iothubclient_ut)
 add_unittest_directory(iothubclientcore_ut)
 add_unittest_directory(iothubmessage_ut)
 add_unittest_directory(iothubtransport_ut)
