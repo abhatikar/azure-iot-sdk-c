@@ -26,7 +26,7 @@
 #include "iothub_device_client.h"
 
 static const IOTHUB_DEVICE_CLIENT_HANDLE TEST_IOTHUB_DEVICE_CLIENT_HANDLE = (IOTHUB_DEVICE_CLIENT_HANDLE)0x0001;
-static const IOTHUB_CLIENT_CORE_HANDLE TEST_IOTHUB_CLIENT_CORE_HANDLE = (IOTHUB_CLIENT_CORE_HANDLE)0x0001; //same as above
+static const IOTHUB_CLIENT_CORE_HANDLE TEST_IOTHUB_CLIENT_CORE_HANDLE = (IOTHUB_CLIENT_CORE_HANDLE)0x0001; //this must be same as above
 static const IOTHUB_CLIENT_TRANSPORT_PROVIDER TEST_TRANSPORT_PROVIDER = (IOTHUB_CLIENT_TRANSPORT_PROVIDER)0x1110;
 static const IOTHUB_CLIENT_CONFIG* TEST_CLIENT_CONFIG = (IOTHUB_CLIENT_CONFIG*)0x1115;
 static IOTHUB_MESSAGE_HANDLE TEST_MESSAGE_HANDLE = (IOTHUB_MESSAGE_HANDLE)0x1116;
@@ -138,7 +138,7 @@ TEST_SUITE_CLEANUP(suite_cleanup)
 TEST_FUNCTION(IoTHubDeviceClient_CreateFromConnectionString_Test)
 {
     //arrange
-    STRICT_EXPECTED_CALL(IoTHubClientCore_CreateFromConnectionString(IGNORED_PTR_ARG, IGNORED_PTR_ARG));
+    STRICT_EXPECTED_CALL(IoTHubClientCore_CreateFromConnectionString(TEST_CONNECTION_STRING, TEST_TRANSPORT_PROVIDER));
 
     //act
     IOTHUB_DEVICE_CLIENT_HANDLE result = IoTHubDeviceClient_CreateFromConnectionString(TEST_CONNECTION_STRING, TEST_TRANSPORT_PROVIDER);
@@ -190,7 +190,7 @@ TEST_FUNCTION(IoTHubDeviceClient_CreateFromDeviceAuth_Test)
 TEST_FUNCTION(IoTHubDeviceClient_Destroy_Test)
 {
     //arrange
-    STRICT_EXPECTED_CALL(IoTHubClientCore_Destroy(IGNORED_PTR_ARG));
+    STRICT_EXPECTED_CALL(IoTHubClientCore_Destroy(TEST_IOTHUB_CLIENT_CORE_HANDLE));
 
     //act
     IoTHubDeviceClient_Destroy(TEST_IOTHUB_DEVICE_CLIENT_HANDLE);
@@ -202,7 +202,7 @@ TEST_FUNCTION(IoTHubDeviceClient_Destroy_Test)
 TEST_FUNCTION(IoTHubDeviceClient_SendEventAsync_Test)
 {
     //arrange
-    STRICT_EXPECTED_CALL(IoTHubClientCore_SendEventAsync(IGNORED_PTR_ARG, TEST_MESSAGE_HANDLE, TEST_EVENT_CONFIRMATION_CALLBACK, NULL));
+    STRICT_EXPECTED_CALL(IoTHubClientCore_SendEventAsync(TEST_IOTHUB_CLIENT_CORE_HANDLE, TEST_MESSAGE_HANDLE, TEST_EVENT_CONFIRMATION_CALLBACK, NULL));
 
     //act
     IOTHUB_CLIENT_RESULT result = IoTHubDeviceClient_SendEventAsync(TEST_IOTHUB_DEVICE_CLIENT_HANDLE, TEST_MESSAGE_HANDLE, TEST_EVENT_CONFIRMATION_CALLBACK, NULL);
@@ -216,7 +216,7 @@ TEST_FUNCTION(IoTHubDeviceClient_GetSendStatus_Test)
 {
     //arrange
     IOTHUB_CLIENT_STATUS iothub_status;
-    STRICT_EXPECTED_CALL(IoTHubClientCore_GetSendStatus(IGNORED_PTR_ARG, &iothub_status));
+    STRICT_EXPECTED_CALL(IoTHubClientCore_GetSendStatus(TEST_IOTHUB_CLIENT_CORE_HANDLE, &iothub_status));
 
     //act
     IOTHUB_CLIENT_RESULT result = IoTHubDeviceClient_GetSendStatus(TEST_IOTHUB_DEVICE_CLIENT_HANDLE, &iothub_status);
@@ -229,7 +229,7 @@ TEST_FUNCTION(IoTHubDeviceClient_GetSendStatus_Test)
 TEST_FUNCTION(IoTHubDeviceClient_SetMessageCallback_Test)
 {
     //arrange
-    STRICT_EXPECTED_CALL(IoTHubClientCore_SetMessageCallback(IGNORED_PTR_ARG, TEST_MESSAGE_CALLBACK_ASYNC, NULL));
+    STRICT_EXPECTED_CALL(IoTHubClientCore_SetMessageCallback(TEST_IOTHUB_CLIENT_CORE_HANDLE, TEST_MESSAGE_CALLBACK_ASYNC, NULL));
 
     //act
     IOTHUB_CLIENT_RESULT result = IoTHubDeviceClient_SetMessageCallback(TEST_IOTHUB_DEVICE_CLIENT_HANDLE, TEST_MESSAGE_CALLBACK_ASYNC, NULL);
@@ -242,7 +242,7 @@ TEST_FUNCTION(IoTHubDeviceClient_SetMessageCallback_Test)
 TEST_FUNCTION(IoTHubDeviceClient_SetConnectionStatusCallback_Test)
 {
     //arrange
-    STRICT_EXPECTED_CALL(IoTHubClientCore_SetConnectionStatusCallback(IGNORED_PTR_ARG, TEST_CONNECTION_STATUS_CALLBACK, NULL));
+    STRICT_EXPECTED_CALL(IoTHubClientCore_SetConnectionStatusCallback(TEST_IOTHUB_CLIENT_CORE_HANDLE, TEST_CONNECTION_STATUS_CALLBACK, NULL));
 
     //act
     IOTHUB_CLIENT_RESULT result = IoTHubDeviceClient_SetConnectionStatusCallback(TEST_IOTHUB_DEVICE_CLIENT_HANDLE, TEST_CONNECTION_STATUS_CALLBACK, NULL);
@@ -255,7 +255,7 @@ TEST_FUNCTION(IoTHubDeviceClient_SetConnectionStatusCallback_Test)
 TEST_FUNCTION(IoTHubDeviceClient_SetRetryPolicy_Test)
 {
     //arrange
-    STRICT_EXPECTED_CALL(IoTHubClientCore_SetRetryPolicy(IGNORED_PTR_ARG, TEST_RETRY_POLICY, TEST_SIZE_T));
+    STRICT_EXPECTED_CALL(IoTHubClientCore_SetRetryPolicy(TEST_IOTHUB_CLIENT_CORE_HANDLE, TEST_RETRY_POLICY, TEST_SIZE_T));
 
     //act
     IOTHUB_CLIENT_RESULT result = IoTHubDeviceClient_SetRetryPolicy(TEST_IOTHUB_DEVICE_CLIENT_HANDLE, TEST_RETRY_POLICY, TEST_SIZE_T);
@@ -270,7 +270,7 @@ TEST_FUNCTION(IoTHubDeviceClient_GetRetryPolicy_Test)
     //arrange
     IOTHUB_CLIENT_RETRY_POLICY retry;
     size_t timeout;
-    STRICT_EXPECTED_CALL(IoTHubClientCore_GetRetryPolicy(IGNORED_PTR_ARG, &retry, &timeout));
+    STRICT_EXPECTED_CALL(IoTHubClientCore_GetRetryPolicy(TEST_IOTHUB_CLIENT_CORE_HANDLE, &retry, &timeout));
 
     //act
     IOTHUB_CLIENT_RESULT result = IoTHubDeviceClient_GetRetryPolicy(TEST_IOTHUB_DEVICE_CLIENT_HANDLE, &retry, &timeout);
@@ -284,7 +284,7 @@ TEST_FUNCTION(IoTHubDeviceClient_GetLastMessageReceiveTime_Test)
 {
     //arrange
     time_t last_msg_time;
-    STRICT_EXPECTED_CALL(IoTHubClientCore_GetLastMessageReceiveTime(IGNORED_PTR_ARG, &last_msg_time));
+    STRICT_EXPECTED_CALL(IoTHubClientCore_GetLastMessageReceiveTime(TEST_IOTHUB_CLIENT_CORE_HANDLE, &last_msg_time));
 
     //act
     IOTHUB_CLIENT_RESULT result = IoTHubDeviceClient_GetLastMessageReceiveTime(TEST_IOTHUB_DEVICE_CLIENT_HANDLE, &last_msg_time);
@@ -297,7 +297,7 @@ TEST_FUNCTION(IoTHubDeviceClient_GetLastMessageReceiveTime_Test)
 TEST_FUNCTION(IoTHubDeviceClient_SetOption_Test)
 {
     //arrange
-    STRICT_EXPECTED_CALL(IoTHubClientCore_SetOption(IGNORED_PTR_ARG, TEST_OPTION, TEST_VALUE));
+    STRICT_EXPECTED_CALL(IoTHubClientCore_SetOption(TEST_IOTHUB_CLIENT_CORE_HANDLE, TEST_OPTION, TEST_VALUE));
 
     //act
     IOTHUB_CLIENT_RESULT result = IoTHubDeviceClient_SetOption(TEST_IOTHUB_DEVICE_CLIENT_HANDLE, TEST_OPTION, TEST_VALUE);
@@ -310,7 +310,7 @@ TEST_FUNCTION(IoTHubDeviceClient_SetOption_Test)
 TEST_FUNCTION(IoTHubDeviceClient_SetDeviceTwinCallback_Test)
 {
     //arrange
-    STRICT_EXPECTED_CALL(IoTHubClientCore_SetDeviceTwinCallback(IGNORED_PTR_ARG, TEST_TWIN_CALLBACK, NULL));
+    STRICT_EXPECTED_CALL(IoTHubClientCore_SetDeviceTwinCallback(TEST_IOTHUB_CLIENT_CORE_HANDLE, TEST_TWIN_CALLBACK, NULL));
 
     //act
     IOTHUB_CLIENT_RESULT result = IoTHubDeviceClient_SetDeviceTwinCallback(TEST_IOTHUB_DEVICE_CLIENT_HANDLE, TEST_TWIN_CALLBACK, NULL);
@@ -323,7 +323,7 @@ TEST_FUNCTION(IoTHubDeviceClient_SetDeviceTwinCallback_Test)
 TEST_FUNCTION(IoTHubDeviceClient_SendReportedState_Test)
 {
     //arrange
-    STRICT_EXPECTED_CALL(IoTHubClientCore_SendReportedState(IGNORED_PTR_ARG, TEST_UNSIGNED_CHAR, TEST_SIZE_T, TEST_REPORTED_STATE_CALLBACK, NULL));
+    STRICT_EXPECTED_CALL(IoTHubClientCore_SendReportedState(TEST_IOTHUB_CLIENT_CORE_HANDLE, TEST_UNSIGNED_CHAR, TEST_SIZE_T, TEST_REPORTED_STATE_CALLBACK, NULL));
 
     //act
     IOTHUB_CLIENT_RESULT result = IoTHubDeviceClient_SendReportedState(TEST_IOTHUB_DEVICE_CLIENT_HANDLE, TEST_UNSIGNED_CHAR, TEST_SIZE_T, TEST_REPORTED_STATE_CALLBACK, NULL);
@@ -336,7 +336,7 @@ TEST_FUNCTION(IoTHubDeviceClient_SendReportedState_Test)
 TEST_FUNCTION(IoTHubDeviceClient_SetDeviceMethodCallback_Test)
 {
     //arrange
-    STRICT_EXPECTED_CALL(IoTHubClientCore_SetDeviceMethodCallback_Ex(IGNORED_PTR_ARG, TEST_INBOUND_DEVICE_METHOD_CALLBACK, NULL));
+    STRICT_EXPECTED_CALL(IoTHubClientCore_SetDeviceMethodCallback_Ex(TEST_IOTHUB_CLIENT_CORE_HANDLE, TEST_INBOUND_DEVICE_METHOD_CALLBACK, NULL));
 
     //act
     IOTHUB_CLIENT_RESULT result = IoTHubDeviceClient_SetDeviceMethodCallback(TEST_IOTHUB_DEVICE_CLIENT_HANDLE, TEST_INBOUND_DEVICE_METHOD_CALLBACK, NULL);
@@ -349,7 +349,7 @@ TEST_FUNCTION(IoTHubDeviceClient_SetDeviceMethodCallback_Test)
 TEST_FUNCTION(IoTHubClientCore_DeviceMethodResponse_Test)
 {
     //arrange
-    STRICT_EXPECTED_CALL(IoTHubClientCore_DeviceMethodResponse(IGNORED_PTR_ARG, TEST_METHOD_HANDLE, TEST_UNSIGNED_CHAR, TEST_SIZE_T, TEST_INT));
+    STRICT_EXPECTED_CALL(IoTHubClientCore_DeviceMethodResponse(TEST_IOTHUB_CLIENT_CORE_HANDLE, TEST_METHOD_HANDLE, TEST_UNSIGNED_CHAR, TEST_SIZE_T, TEST_INT));
 
     //act
     IOTHUB_CLIENT_RESULT result = IoTHubDeviceClient_DeviceMethodResponse(TEST_IOTHUB_DEVICE_CLIENT_HANDLE, TEST_METHOD_HANDLE, TEST_UNSIGNED_CHAR, TEST_SIZE_T, TEST_INT);
@@ -364,7 +364,7 @@ TEST_FUNCTION(IoTHubClientCore_DeviceMethodResponse_Test)
 TEST_FUNCTION(IoTHubDeviceClient_UploadToBlobAsync_Test)
 {
     //arrange
-    STRICT_EXPECTED_CALL(IoTHubClientCore_UploadToBlobAsync(IGNORED_PTR_ARG, TEST_CHAR_PTR, TEST_UNSIGNED_CHAR, TEST_SIZE_T, TEST_FILE_UPLOAD_CALLBACK, NULL));
+    STRICT_EXPECTED_CALL(IoTHubClientCore_UploadToBlobAsync(TEST_IOTHUB_CLIENT_CORE_HANDLE, TEST_CHAR_PTR, TEST_UNSIGNED_CHAR, TEST_SIZE_T, TEST_FILE_UPLOAD_CALLBACK, NULL));
 
     //act
     IOTHUB_CLIENT_RESULT result = IoTHubDeviceClient_UploadToBlobAsync(TEST_IOTHUB_DEVICE_CLIENT_HANDLE, TEST_CHAR_PTR, TEST_UNSIGNED_CHAR, TEST_SIZE_T, TEST_FILE_UPLOAD_CALLBACK, NULL);
@@ -377,7 +377,7 @@ TEST_FUNCTION(IoTHubDeviceClient_UploadToBlobAsync_Test)
 TEST_FUNCTION(IoTHubDeviceClient_UploadMultipleBlocksToBlobAsync_Test)
 {
     //arrange
-    STRICT_EXPECTED_CALL(IoTHubClientCore_UploadMultipleBlocksToBlobAsync(IGNORED_PTR_ARG, TEST_CHAR_PTR, NULL, TEST_FILE_UPLOAD_GET_DATA_CALLBACK_EX, NULL));
+    STRICT_EXPECTED_CALL(IoTHubClientCore_UploadMultipleBlocksToBlobAsync(TEST_IOTHUB_CLIENT_CORE_HANDLE, TEST_CHAR_PTR, NULL, TEST_FILE_UPLOAD_GET_DATA_CALLBACK_EX, NULL));
 
     //act
     IOTHUB_CLIENT_RESULT result = IoTHubDeviceClient_UploadMultipleBlocksToBlobAsync(TEST_IOTHUB_DEVICE_CLIENT_HANDLE, TEST_CHAR_PTR, TEST_FILE_UPLOAD_GET_DATA_CALLBACK_EX, NULL);

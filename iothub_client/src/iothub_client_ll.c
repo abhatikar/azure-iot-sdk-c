@@ -16,6 +16,7 @@
 #include "iothub_client_authorization.h"
 #include "iothub_client_ll.h"
 #include "iothub_transport_ll.h"
+#include "iothub_device_client_ll.h"
 #include "iothub_client_private.h"
 #include "iothub_client_options.h"
 #include "iothub_client_version.h"
@@ -30,107 +31,6 @@
 #include "iothub_client_ll_uploadtoblob.h"
 #endif
 
-
-IOTHUB_CLIENT_LL_HANDLE IoTHubClient_LL_CreateFromDeviceAuth(const char* iothub_uri, const char* device_id, IOTHUB_CLIENT_TRANSPORT_PROVIDER protocol)
-{
-    IOTHUB_CLIENT_LL_HANDLE result;
-    if (iothub_uri == NULL || protocol == NULL || device_id == NULL)
-    {
-        LogError("Input parameter is NULL: iothub_uri: %p  protocol: %p device_id: %p", iothub_uri, protocol, device_id);
-        result = NULL;
-    }
-    else
-    {
-#ifdef USE_PROV_MODULE
-        IOTHUB_CLIENT_CONFIG* config = (IOTHUB_CLIENT_CONFIG*)malloc(sizeof(IOTHUB_CLIENT_CONFIG));
-        if (config == NULL)
-        {
-            /* Codes_SRS_IOTHUBCLIENT_LL_12_012: [If the allocation failed IoTHubClientCore_LL_CreateFromConnectionString  returns NULL]  */
-            LogError("Malloc failed");
-            result = NULL;
-        }
-        else
-        {
-            const char* iterator;
-            const char* initial;
-            char* iothub_name = NULL;
-            char* iothub_suffix = NULL;
-
-            memset(config, 0, sizeof(IOTHUB_CLIENT_CONFIG));
-            config->protocol = protocol;
-            config->deviceId = device_id;
-
-            // Find the iothub suffix
-            initial = iterator = iothub_uri;
-            while (iterator != NULL && *iterator != '\0')
-            {
-                if (*iterator == '.')
-                {
-                    size_t length = iterator - initial;
-                    iothub_name = (char*)malloc(length + 1);
-                    if (iothub_name != NULL)
-                    {
-                        memset(iothub_name, 0, length + 1);
-                        memcpy(iothub_name, initial, length);
-                        config->iotHubName = iothub_name;
-
-                        length = strlen(initial) - length - 1;
-                        iothub_suffix = (char*)malloc(length + 1);
-                        if (iothub_suffix != NULL)
-                        {
-                            memset(iothub_suffix, 0, length + 1);
-                            memcpy(iothub_suffix, iterator + 1, length);
-                            config->iotHubSuffix = iothub_suffix;
-                            break;
-                        }
-                        else
-                        {
-                            LogError("Failed to allocate iothub suffix");
-                            free(iothub_name);
-                            iothub_name = NULL;
-                            result = NULL;
-                        }
-                    }
-                    else
-                    {
-                        LogError("Failed to allocate iothub name");
-                        result = NULL;
-                    }
-                }
-                iterator++;
-            }
-
-            if (config->iotHubName == NULL || config->iotHubSuffix == NULL)
-            {
-                LogError("initialize iothub client");
-                result = NULL;
-            }
-            else
-            {
-                IOTHUB_CLIENT_CORE_LL_HANDLE_DATA* handleData = initialize_iothub_client(config, NULL, true);
-                if (handleData == NULL)
-                {
-                    LogError("initialize iothub client");
-                    result = NULL;
-                }
-                else
-                {
-                    result = handleData;
-                }
-            }
-
-            free(iothub_name);
-            free(iothub_suffix);
-            free(config);
-        }
-#else
-        LogError("HSM module is not included");
-        result = NULL;
-#endif
-    }
-    return result;
-}
-
 IOTHUB_CLIENT_LL_HANDLE IoTHubClient_LL_CreateFromConnectionString(const char* connectionString, IOTHUB_CLIENT_TRANSPORT_PROVIDER protocol)
 {
     return (IOTHUB_CLIENT_LL_HANDLE)IoTHubClientCore_LL_CreateFromConnectionString(connectionString, protocol);
@@ -144,6 +44,11 @@ IOTHUB_CLIENT_LL_HANDLE IoTHubClient_LL_Create(const IOTHUB_CLIENT_CONFIG* confi
 IOTHUB_CLIENT_LL_HANDLE IoTHubClient_LL_CreateWithTransport(const IOTHUB_CLIENT_DEVICE_CONFIG * config)
 {
     return (IOTHUB_CLIENT_LL_HANDLE)IoTHubClientCore_LL_CreateWithTransport(config);
+}
+
+IOTHUB_CLIENT_LL_HANDLE IoTHubClient_LL_CreateFromDeviceAuth(const char* iothub_uri, const char* device_id, IOTHUB_CLIENT_TRANSPORT_PROVIDER protocol)
+{
+    return (IOTHUB_CLIENT_LL_HANDLE)IoTHubClientCore_LL_CreateFromDeviceAuth(iothub_uri, device_id, protocol);
 }
 
 void IoTHubClient_LL_Destroy(IOTHUB_CLIENT_LL_HANDLE iotHubClientHandle)

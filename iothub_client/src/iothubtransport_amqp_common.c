@@ -128,7 +128,7 @@ typedef struct AMQP_TRANSPORT_DEVICE_INSTANCE_TAG
 {
     STRING_HANDLE device_id;                                            // Identity of the device.
     AMQP_DEVICE_HANDLE device_handle;                                   // Logic unit that performs authentication, messaging, etc.
-    IOTHUB_CLIENT_CORE_LL_HANDLE iothub_client_handle;                       // Saved reference to the IoTHub LL Client.
+    IOTHUB_CLIENT_CORE_LL_HANDLE iothub_client_handle;                  // Saved reference to the IoTHub Core LL Client.
     AMQP_TRANSPORT_INSTANCE* transport_instance;                        // Saved reference to the transport the device is registered on.
     PDLIST_ENTRY waiting_to_send;                                       // List of events waiting to be sent to the iot hub (i.e., haven't been processed by the transport yet).
     DEVICE_STATE device_state;                                          // Current state of the device_handle instance.
