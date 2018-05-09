@@ -103,7 +103,7 @@ extern "C"
      * @param	device_auth_handle	a device auth handle used to generate the connection string
      * @param	protocol			Function pointer for protocol implementation
      *
-     * @return	A non-NULL @c IOTHUB_CLIENT_LL_HANDLE value that is used when
+     * @return	A non-NULL @c IOTHUB_DEVICE_CLIENT_LL_HANDLE value that is used when
      * 			invoking other functions for IoT Hub client and @c NULL on failure.
      */
      MOCKABLE_FUNCTION(, IOTHUB_DEVICE_CLIENT_LL_HANDLE, IoTHubDeviceClient_LL_CreateFromDeviceAuth, const char*, iothub_uri, const char*, device_id, IOTHUB_CLIENT_TRANSPORT_PROVIDER, protocol);

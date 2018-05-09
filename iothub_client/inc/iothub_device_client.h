@@ -12,8 +12,8 @@
 *				- thread-safe APIs
 */
 
-#ifndef IOTHUB_DEVICE_CLIENT_H
-#define IOTHUB_DEVICE_CLIENT_H
+#ifndef IOTHUB_CLIENT_H
+#define IOTHUB_CLIENT_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -24,9 +24,9 @@
 #include "internal/iothub_client_core.h"
 #include "iothub_device_client_ll.h"
 
-#ifndef IOTHUB_CLIENT_INSTANCE_TYPE
+#ifndef IOTHUB_DEVICE_CLIENT_INSTANCE_TYPE
 typedef IOTHUB_CLIENT_CORE_HANDLE IOTHUB_DEVICE_CLIENT_HANDLE;
-#define IOTHUB_CLIENT_INSTANCE_TYPE
+#define IOTHUB_DEVICE_CLIENT_INSTANCE_TYPE
 #endif // IOTHUB_CLIENT_INSTANCE
 
 
@@ -90,7 +90,7 @@ extern "C"
     * @param	device_id	Pointer to the device Id of the device
     * @param	protocol	Function pointer for protocol implementation
     *
-    * @return	A non-NULL @c IOTHUB_CLIENT_LL_HANDLE value that is used when
+    * @return	A non-NULL @c IOTHUB_DEVICE_CLIENT_HANDLE value that is used when
     * 			invoking other functions for IoT Hub client and @c NULL on failure.
     */
     MOCKABLE_FUNCTION(, IOTHUB_DEVICE_CLIENT_HANDLE, IoTHubDeviceClient_CreateFromDeviceAuth, const char*, iothub_uri, const char*, device_id, IOTHUB_CLIENT_TRANSPORT_PROVIDER, protocol);
@@ -365,4 +365,4 @@ extern "C"
 }
 #endif
 
-#endif /* IOTHUB_DEVICE_CLIENT_H */
+#endif /* IOTHUB_CLIENT_H */
